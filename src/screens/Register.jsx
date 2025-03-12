@@ -1,60 +1,62 @@
-import React, { useEffect } from "react";
-import "./Register.css";
+import React, { useMemo } from "react";
 import { useState } from "react";
+import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { Navigate } from "react-router";
+const expensiveCalculation = (num) => {
+  console.log("Calculating...");
+  for (let i = 0; i < 100000000; i++) {
+    num += 1;
+  }
+  return num;
+};
 
 function Register() {
-  function HandleRegister(event) {
-    event.preventDefault();
-    console.log("hello World");
+  const [count, setCount] = useState(0);
+
+  const [redirect, setRedirect] = useState(false);
+
+  const [todo, setTodos] = useState([]);
+  const Calculation = useMemo(() => expensiveCalculation(count), [count]);
+  // const navigate = useNavigate();
+  const addTodo = () => {
+    setTodos((t) => [...t, "Todo Task"]);
+  };
+
+  function increment() {
+    setCount(count + 1);
   }
 
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [humanage, setHumanAge] = useState(133);
-
-  function increaseAge(event) {
-    event.preventDefault();
-    setHumanAge(humanage + 1);
+  function goToUserList() {
+    setRedirect(true);
+    // navigate("/user-list");
   }
-  console.log(email);
-  console.log(password);
 
-  useEffect(() => {
-    console.log("age : ", humanage);
-  }, [humanage]);
-
-  let age = 19;
+  if (redirect) {
+    <Navigate to="/user-list"></Navigate>;
+  }
 
   return (
-    <form>
-      {age > 18 ? (
-        <div>
-          <h1>{humanage}</h1>
-
-          <input
-            className="form-input"
-            type="email"
-            placeholder="abc@gmail.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          ></input>
-          <input
-            className="form-input"
-            type="password"
-            placeholder="Enter Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          ></input>
-          <button onClick={HandleRegister}>submit</button>
-        </div>
-      ) : (
-        <div>
-          <h1>You are under 18</h1>
-        </div>
-      )}
-      <button onClick={increaseAge}>Increase</button>
-    </form>
+    <div>
+      <div>
+        <h2>My Todos</h2>
+        {todo.map((todo, index) => {
+          return <p key={index}>{todo}</p>;
+        })}
+        <button onClick={addTodo}>Add Todo</button>
+      </div>
+      <hr />
+      <div>
+        Count : {count}
+        <button onClick={increment}>+</button>
+        <h2>Expensive Calculation</h2>
+        {Calculation}
+      </div>
+      <Link to="/user-list">Take me to user List screen</Link>
+      <button onClick={goToUserList}>Go to user List</button>
+    </div>
   );
 }
-
 export default Register;
+
+
