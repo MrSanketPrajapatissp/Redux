@@ -1,8 +1,10 @@
 import React, { useMemo } from "react";
 import { useState } from "react";
-import { Link } from "react-router";
-import { useNavigate } from "react-router";
-import { Navigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
+
+import Title from "../components/Title";
+import { useSelector } from "react-redux";
+
 const expensiveCalculation = (num) => {
   console.log("Calculating...");
   for (let i = 0; i < 100000000; i++) {
@@ -12,13 +14,14 @@ const expensiveCalculation = (num) => {
 };
 
 function Register() {
-  const [count, setCount] = useState(0);
+  const value = useSelector((state) => state.counter?.value || 0);
 
-  const [redirect, setRedirect] = useState(false);
+  const [count, setCount] = useState(0);
 
   const [todo, setTodos] = useState([]);
   const Calculation = useMemo(() => expensiveCalculation(count), [count]);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
   const addTodo = () => {
     setTodos((t) => [...t, "Todo Task"]);
   };
@@ -28,21 +31,17 @@ function Register() {
   }
 
   function goToUserList() {
-    setRedirect(true);
-    // navigate("/user-list");
-  }
-
-  if (redirect) {
-    <Navigate to="/user-list"></Navigate>;
+    navigate("/user-list");
   }
 
   return (
     <div>
       <div>
         <h2>My Todos</h2>
-        {todo.map((todo, index) => {
-          return <p key={index}>{todo}</p>;
-        })}
+        <h3>{value}</h3>
+        {todo.map((todo, index) => (
+          <Title key={index} name={todo} />
+        ))}
         <button onClick={addTodo}>Add Todo</button>
       </div>
       <hr />
@@ -54,9 +53,8 @@ function Register() {
       </div>
       <Link to="/user-list">Take me to user List screen</Link>
       <button onClick={goToUserList}>Go to user List</button>
+      <Link to="/contact">go to contact</Link>
     </div>
   );
 }
 export default Register;
-
-

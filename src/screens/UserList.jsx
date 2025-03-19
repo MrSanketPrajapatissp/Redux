@@ -10,7 +10,7 @@ export default function UserList() {
       {data.map( ({user,email,rollNo}) => (
         <div>
         <Title name = {user}/>
-            <UserCard  email={email} rollNo={rollNo}/>
+        <UserCard  email={email} rollNo={rollNo}/>
         </div>
 
       ))}
